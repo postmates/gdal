@@ -27,9 +27,9 @@ BUILD_FOR_CHEESESHOP = False
 # (may be overriden with setup.cfg or command line switches).
 # ---------------------------------------------------------------------------
 
-include_dirs = ['../../port', '../../gcore', '../../alg', '../../ogr/']
-library_dirs = ['../../.libs', '../../']
-libraries = ['gdal']
+include_dirs = ['../../port', '../../gcore', '../../alg', '../../ogr/', '/usr/include/gdal', '.']
+library_dirs = ['../../.libs', '../../', '/usr/lib']
+libraries = ['gdal1.7.0']
 
 # ---------------------------------------------------------------------------
 # Helper Functions
@@ -117,7 +117,8 @@ class gdal_ext(build_ext):
         return self.compiler or get_default_compiler()
     
     def get_gdal_config(self, option):
-        return get_gdal_config(option, gdal_config =self.gdal_config)
+	print option
+        return get_gdal_config(option, gdal_config=self.GDAL_CONFIG)
     
     def finalize_options(self):
         if self.include_dirs is None:
@@ -138,10 +139,18 @@ class gdal_ext(build_ext):
             return True
         try:
             self.gdaldir = self.get_gdal_config('prefix')
-            self.library_dirs.append(os.path.join(self.gdaldir,'lib'))
-            self.include_dirs.append(os.path.join(self.gdaldir,'include'))
         except:
-            print ('Could not run gdal-config!!!!')
+            print ('Could not run gdal-config!!!! 1')
+        try:
+            self.library_dirs.append(os.path.join(self.gdaldir,'lib'))
+            print self.library_dirs
+        except:
+            print ('Could not run gdal-config!!!! 2')
+        try:
+            self.include_dirs.append(os.path.join(self.gdaldir,'include'))
+            print self.include_dirs
+        except:
+            print ('Could not run gdal-config!!!! 3')
 
 extra_link_args = []
 extra_compile_args = []
