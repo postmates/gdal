@@ -1,5 +1,5 @@
 #!/usr/bin/env python
- 
+
 # Setup script for GDAL Python bindings.
 # Inspired by psycopg2 setup.py file
 # http://www.initd.org/tracker/psycopg/browser/psycopg2/trunk/setup.py
@@ -29,7 +29,7 @@ BUILD_FOR_CHEESESHOP = False
 
 include_dirs = ['../../port', '../../gcore', '../../alg', '../../ogr/', '/usr/include/gdal', '.']
 library_dirs = ['../../.libs', '../../', '/usr/lib']
-libraries = ['gdal1.7.0']
+libraries = ['gdal']
 
 # ---------------------------------------------------------------------------
 # Helper Functions
@@ -76,7 +76,7 @@ from distutils.ccompiler import get_default_compiler
 from distutils.sysconfig import get_python_inc
 
 def get_gdal_config(option, gdal_config='gdal-config'):
-    
+
     command = gdal_config + " --%s" % option
     try:
         import subprocess
@@ -87,16 +87,16 @@ def get_gdal_config(option, gdal_config='gdal-config'):
         p.wait()
 
     except ImportError:
-        
+
         import popen2
-        
+
         p = popen2.popen3(command)
         r = p[0].readline().strip()
         if not r:
             raise Warning(p[2].readline())
-    
+
     return r
-    
+
 class gdal_ext(build_ext):
 
     GDAL_CONFIG = 'gdal-config'
@@ -115,11 +115,11 @@ class gdal_ext(build_ext):
 
     def get_compiler(self):
         return self.compiler or get_default_compiler()
-    
+
     def get_gdal_config(self, option):
 	print option
         return get_gdal_config(option, gdal_config=self.GDAL_CONFIG)
-    
+
     def finalize_options(self):
         if self.include_dirs is None:
             self.include_dirs = include_dirs
@@ -132,9 +132,9 @@ class gdal_ext(build_ext):
             self.libraries = libraries
 
         build_ext.finalize_options(self)
-        
+
         self.include_dirs.append(self.numpy_include_dir)
-        
+
         if self.get_compiler() == 'msvc':
             return True
         try:
@@ -190,7 +190,7 @@ py_modules = ['gdal',
               'ogr',
               'osr',
               'gdalconst']
-      
+
 if HAVE_NUMPY:
     ext_modules.append(array_module)
     py_modules.append('gdalnumeric')
@@ -220,7 +220,7 @@ classifiers = [
         'Programming Language :: C++',
         'Topic :: Scientific/Engineering :: GIS',
         'Topic :: Scientific/Engineering :: Information Analysis',
-        
+
 ]
 
 
@@ -229,7 +229,7 @@ if BUILD_FOR_CHEESESHOP:
     data_files = [("osgeo/data/gdal", glob(os.path.join("../../data", "*")))]
 else:
     data_files = None
-    
+
 exclude_package_data = {'':['GNUmakefile']}
 
 if HAVE_SETUPTOOLS:
